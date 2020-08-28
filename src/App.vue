@@ -8,7 +8,7 @@
         @keyup.enter="getQuery"
       >
     </label>
-    <div class="queryFromSpace">
+    <div class="queryFromSpace" v-if="parsedData[0]">
       {{ parsedData }}
     </div>
   </div>
@@ -27,13 +27,20 @@ export default {
   },
   methods: {
     getQuery() {
-      fetch(`${this.api_url}/${this.query}`)
-        .then((res) => {
-          this.query = '';
-          return res.json();
-        }).then(this.setResults);
+      if (this.query) {
+        console.log(this.query);
+        fetch(`${this.api_url}/${this.query}`)
+          .then((res) => {
+            if (!res.ok) {
+              return `${this.query} — is a wrong query! No Data found!`;
+            }
+            return res.json();
+          })
+          .then(this.setResults);
+      }
     },
     setResults(results) {
+      this.query = '';
       this.parsedData = results;
     },
   },
