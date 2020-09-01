@@ -8,8 +8,10 @@
         @keyup.enter="getQuery"
       >
     </label>
-    <div class="queryFromSpace" v-if="parsedData[0]">
-      {{ parsedData }}
+    <div class="queryFromSpace"
+         v-if=" parsedData[0] || query === 'dragons' "
+    >
+      {{ dragonsInfo }} {{ parsedData[0] }}
     </div>
   </div>
 </template>
@@ -23,6 +25,7 @@ export default {
       api_url: 'https://api.spacexdata.com/v3',
       query: '',
       parsedData: {},
+      dragonsInfo: 'Info about dragons: ',
     };
   },
   methods: {
@@ -38,10 +41,13 @@ export default {
           })
           .then(this.setResults);
       }
+      this.parsedData = '';
+      return this.parsedData;
     },
     setResults(results) {
       this.query = '';
       this.parsedData = results;
+      console.warn(results);
     },
   },
 };
